@@ -15,6 +15,13 @@ function letsGo() {
         searchACity(document.querySelector('#search-field').value);
 
     });
+
+
+
+
+
+
+
 }
 
 function searchACity(cityName) {
@@ -44,6 +51,15 @@ function searchACity(cityName) {
             $('#search-results').append(listItem);
 
         });
+
+        if ($('#search-results').length > 0) {
+            document.querySelector(".list-group-item").addEventListener("click", function () {
+
+                searchACity(this.textContent);
+
+
+            });
+        }
 
     });
 }

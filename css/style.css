@@ -1,0 +1,77 @@
+p {
+    font-size: 35px;
+    font-family: 'Do Hyeon', sans-serif;
+}
+
+#search-button {
+    float: right;
+}
+
+@media (min-width: 768px) {
+    .h-md-100 {
+        height: 100vh;
+    }
+}
+
+.btn-round {
+    border-radius: 30px;
+}
+
+.bg-indigo {
+    background: cornflowerblue;
+}
+
+.text-cyan {
+    color: #35bdff;
+}
+
+h1 {
+    font-size: 100px;
+    font-family: 'Gugi', cursive;
+}
+
+h2 {
+    font-size: 40px;
+    font-family: 'Gugi', cursive;
+}
+
+#dashboard-text {
+    color: white;
+    text-align: center;
+}
+
+#results-date {
+    font-family: 'Gugi', cursive;
+    font-size: 40px;
+    position: absolute;
+    padding-top: 40px;
+}
+
+#results-city-name {
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 100px;
+}
+
+body {
+    line-height: 1.0;
+}
+
+#five-day-forecast {
+    font-family: 'Gugi', cursive;
+    font-size: 70px;
+    text-align: center;
+}
+
+p span {
+    font-family: 'Gugi', cursive;
+    font-size: 70px;
+    text-align: center;
+    background-color: #343a40;
+    color: white;
+    padding: 5px;
+    border-radius: 20px;
+}
+
+body{
+    overflow:  hidden;
+}

@@ -28,6 +28,7 @@ p {
 h1 {
     font-size: 100px;
     font-family: 'Gugi', cursive;
+    
 }
 
 h2 {
@@ -68,10 +69,15 @@ p span {
     text-align: center;
     background-color: #343a40;
     color: white;
-    padding: 5px;
+    padding: 10px;
     border-radius: 20px;
 }
 
 body{
     overflow:  hidden;
+}
+
+li {
+    color: black;
+    font-size: 24px;
 }

@@ -1,11 +1,10 @@
 const apiKey = "25ab3c34a12d0c6508e3ac9bdd6bfe25";
 const myurl = "http://api.openweathermap.org/data/2.5/";
 const forecast = "forecast?appid=";
-
-
 const currentDate = moment().format('MM/DD/YYYY');
 
 let searchHistory = [];
+let fiveDayForecast = [];
 
 
 $(document).ready(() => letsGo());
@@ -26,9 +25,7 @@ function letsGo() {
             searchACity(this.textContent);
 
         });
-
     }
-
 }
 
 function kelvinToFarenheit(kelvin) {
@@ -52,6 +49,12 @@ function searchACity(cityName) {
         }
     }
     ).then(function (response) {
+
+        let currentWeatherIcon = response.list[0].weather[0].icon;
+        
+        let picUrl = "http://openweathermap.org/img/wn/" + currentWeatherIcon + "@2x.png";
+
+
         // update the HTML with the response info
         document.querySelector("#results-city-name").textContent = response.city.name;
 
@@ -67,11 +70,13 @@ function searchACity(cityName) {
 
         document.querySelector("#results-date").textContent = "\xa0\xa0(" + currentDate + ")";
 
-        console.log("lat: " + response.city.coord.lat);
-        console.log("lon: " + response.city.coord.lon);
 
+        $("#results-icon").attr("src", picUrl);
 
+        // get the UV Index based on the latitude & longitude
         uvSearch(response.city.coord.lat, response.city.coord.lon);
+
+        fiveDayForecast(response.list);
 
         // add the city name to the searchResults array
 
@@ -102,11 +107,63 @@ function searchACity(cityName) {
 
         }).then(function (response) {
 
-            console.log(response.value);
-            document.querySelector("#results-uv-index").textContent = "UV Index: " + response.value;
+           
+            $('#uvSpan').css("padding", "5px");
+            if (response.value < 3) {
+                $('#uvSpan').css("background-color", "green");
+            } else if (response.value > 2 && response.value < 6) {
+                $("#uvSpan").css("background-color", "yellow");
+            } else {
+                $('#uvSpan').css("background-color", "red");
+            }
+            document.querySelector("#uvSpan").textContent = response.value;
 
         });
     };
+}
+
+function fiveDayForecast(list) {
+    let numberOfDays = 1;
+
+    list.forEach(function (i) {
+
+
+        let iteratedDate = moment(i.dt_txt).format("MM DD YYYY");
+        let checkDate = moment().add(numberOfDays, 'days').format("MM DD YYYY");
+
+        /* console.log('values: ' + numberOfDays, iteratedDate, checkDate); */
+
+        if (checkDate === iteratedDate) {
+
+
+            // use fiveDayForecast to add each day's relevant info 
+            // we need: date, icon, max_temp & humidity
+
+            
+
+
+
+
+
+
+            numberOfDays++;
+        }
+
+
+
+
+
+
+
+    });
+
+
+
+
+    /* console.log(moment().add(3, 'days').format("MM DD YYYY")); */
+
+
+
 }
 
 

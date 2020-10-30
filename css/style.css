@@ -64,7 +64,7 @@ body {
     text-align: center;
 }
 
-p span {
+#five-day-span {
     font-family: 'Gugi', cursive;
     font-size: 70px;
     text-align: center;
@@ -83,3 +83,4 @@ li {
     color: #343a40;
     font-size: 24px;
 }
+

@@ -35,6 +35,8 @@ function kelvinToFarenheit(kelvin) {
 }
 
 function searchACity(cityName) {
+    $('#five-boxes').html("");
+    fiveDayArray = [];
 
     $.ajax({
         url: myurl + forecast + apiKey + "&q=" + cityName,
@@ -76,6 +78,7 @@ function searchACity(cityName) {
         // get the UV Index based on the latitude & longitude
         uvSearch(response.city.coord.lat, response.city.coord.lon);
 
+        // build the 5 day forecast 
         fiveDayForecast(response.list);
 
         // add the city name to the searchResults array
@@ -123,7 +126,7 @@ function searchACity(cityName) {
 }
 
 function fiveDayForecast(list) {
-    let numberOfDays = 1;
+    let numberOfDays = 2;
 
     list.forEach(function (i) {
 
@@ -131,7 +134,7 @@ function fiveDayForecast(list) {
         let iteratedDate = moment(i.dt_txt).format("MM DD YYYY");
         let checkDate = moment().add(numberOfDays, 'days').format("MM DD YYYY");
 
-        if (checkDate === iteratedDate && numberOfDays < 6) {
+        if (checkDate === iteratedDate && numberOfDays < 7) {
 
 
             // use fiveDayArray to add each day's relevant info 
@@ -166,7 +169,7 @@ function buildFiveBoxes(box) {
     box.forEach(function (index) {
 
         let newBox = $("<div>");
-        newBox.css("background-color", "blue").css("height", "200px").css("width", "200px").css("color", "white").css("font-size", "20px").css("margin", "10px").css("border-radius", "10px").css("text-align", "center").css('padding-left', "10px");
+        newBox.addClass("fiveDayBox");
         newBox.text(index.date);
         let picUrl = "http://openweathermap.org/img/wn/" + index.icon + "@2x.png";
         let newPic = $("<img>").attr("src", picUrl);

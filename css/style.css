@@ -85,3 +85,18 @@ li {
 #five-boxes {
     padding-left: 160px;
 }
+
+.fiveDayBox {
+
+    background-color: blue;
+    height: 200px;
+    width: 200px;
+    color: white;
+    font-size: 20px;
+    margin: 10px;
+    border-radius: 10px;
+    text-align: center;
+    padding-left: 10px;
+    
+
+}

@@ -4,7 +4,7 @@ const forecast = "forecast?appid=";
 const currentDate = moment().format('MM/DD/YYYY');
 
 let searchHistory = [];
-let fiveDayForecast = [];
+let fiveDayArray = [];
 
 
 $(document).ready(() => letsGo());
@@ -51,7 +51,7 @@ function searchACity(cityName) {
     ).then(function (response) {
 
         let currentWeatherIcon = response.list[0].weather[0].icon;
-        
+
         let picUrl = "http://openweathermap.org/img/wn/" + currentWeatherIcon + "@2x.png";
 
 
@@ -107,7 +107,7 @@ function searchACity(cityName) {
 
         }).then(function (response) {
 
-           
+
             $('#uvSpan').css("padding", "5px");
             if (response.value < 3) {
                 $('#uvSpan').css("background-color", "green");
@@ -131,40 +131,55 @@ function fiveDayForecast(list) {
         let iteratedDate = moment(i.dt_txt).format("MM DD YYYY");
         let checkDate = moment().add(numberOfDays, 'days').format("MM DD YYYY");
 
-        /* console.log('values: ' + numberOfDays, iteratedDate, checkDate); */
-
-        if (checkDate === iteratedDate) {
+        if (checkDate === iteratedDate && numberOfDays < 6) {
 
 
-            // use fiveDayForecast to add each day's relevant info 
+            // use fiveDayArray to add each day's relevant info 
             // we need: date, icon, max_temp & humidity
 
-            
+            fiveDayArray.push({
 
+                date: iteratedDate,
+                icon: i.weather[0].icon.replace("n", "d"),
+                temp_max: i.main.temp_max,
+                humidity: i.main.humidity
 
-
-
-
+            });
 
             numberOfDays++;
         }
+    });
+
+    // converts object array to a Set which is a lazy way to remove duplicates due to crappy noob code :)
+    let uniqueSet = [...new Set(fiveDayArray)];
+
+    // use uniqueSet to build the five day forecast boxes
+    buildFiveBoxes(uniqueSet);
+
+};
 
 
+function buildFiveBoxes(box) {
 
+    console.log(box);
 
+    box.forEach(function (index) {
 
+        let newBox = $("<div>");
+        newBox.css("background-color", "blue").css("height", "200px").css("width", "200px").css("color", "white").css("font-size", "20px").css("margin", "10px").css("border-radius", "10px").css("text-align", "center").css('padding-left', "10px");
+        newBox.text(index.date);
+        let picUrl = "http://openweathermap.org/img/wn/" + index.icon + "@2x.png";
+        let newPic = $("<img>").attr("src", picUrl);
+        newBox.append(newPic);
+        let tempSpan = $("<span>").text(kelvinToFarenheit(index.temp_max).toFixed(2) + "°F").css("text-align", "center").css("font-size", "40px").css("padding-bottom", "10px");
+        newBox.append(tempSpan);
+        let humiditySpan = $("<span>").text("Humidity: " + index.humidity + "%").css("text-align", "center");
+        newBox.append("<br>");
+        newBox.append(humiditySpan);
 
+        $("#five-boxes").append(newBox);
 
     });
 
-
-
-
-    /* console.log(moment().add(3, 'days').format("MM DD YYYY")); */
-
-
-
 }
-
-
 

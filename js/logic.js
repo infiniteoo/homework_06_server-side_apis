@@ -32,9 +32,11 @@ function kelvinToFarenheit(kelvin) {
 }
 
 function searchACity(cityName) {
+    // reset the five day forecast div & array for new data
     $('#five-boxes').html("");
     fiveDayArray = [];
 
+    // make async call and search for the user's request
     $.ajax({
         url: myurl + forecast + apiKey + "&q=" + cityName,
         method: "GET",
@@ -95,6 +97,7 @@ function searchACity(cityName) {
 
     });
 
+    // find the UV index of a city based on its coordinates
     function uvSearch(lat, lon) {
 
         $.ajax({
@@ -122,14 +125,14 @@ function searchACity(cityName) {
 
 function fiveDayForecast(list) {
 
-    let numberOfDays = 2;
+    let numberOfDays = 1;
 
     list.forEach(function (i) {
 
         let iteratedDate = moment(i.dt_txt).format("MM DD YYYY");
         let checkDate = moment().add(numberOfDays, 'days').format("MM DD YYYY");
 
-        if (checkDate === iteratedDate && numberOfDays < 7) {
+        if (checkDate === iteratedDate && numberOfDays < 6) {
 
             // use fiveDayArray to add each day's relevant info 
             // we need: date, icon, max_temp & humidity

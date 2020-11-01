@@ -1,16 +1,78 @@
 const apiKey = "25ab3c34a12d0c6508e3ac9bdd6bfe25";
 const myurl = "http://api.openweathermap.org/data/2.5/";
 const forecast = "forecast?appid=";
+const weatherCall = "weather?appid=";
 const currentDate = moment().format('MM/DD/YYYY');
 
 let searchHistory = [];
 let fiveDayArray = [];
 
 
+// thanks to w3schools for this bit of code and teaching me the (very basic) ways of geolocating. 
+
+function getLocation() {
+
+    // the user needs to agree to allow to search their location
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition, handle_error);
+
+    } 
+    
+    function handle_error(err) {
+
+        if (err.code == 1) {
+
+            // user said no! set default coords to Minneapolis/St. Paul
+            userLat = 44.98;
+            userLong = -93.27;
+
+            $.ajax({
+                url: myurl + weatherCall + apiKey + "&lat=" + userLat.toFixed(1) + "&lon=" + userLong.toFixed(0),
+                method: "GET",
+
+            }).then(function (r) {
+
+                searchACity(r.name);
+
+
+            });
+
+        }
+    }
+
+    function showPosition(position) {
+        if (navigator.geolocation) {
+            userLat = position.coords.latitude;
+            userLong = position.coords.longitude;
+        } else {
+            userLat = 44.98;
+            userLong = 93.27;
+        }
+
+        console.log(userLat, userLong);
+
+        $.ajax({
+            url: myurl + weatherCall + apiKey + "&lat=" + userLat.toFixed(1) + "&lon=" + userLong.toFixed(0),
+            method: "GET",
+
+        }).then(function (r) {
+
+            searchACity(r.name);
+
+
+        });
+    }
+};
+
+
+// just to ensure jQuery doesn't jump the gun on the HTML/CSS...
 $(document).ready(() => letsGo());
 
 
+// set up button listners for the main search button and search history
 function letsGo() {
+
+    getLocation();
 
     $('#search-button').on('click', function () {
 
@@ -32,15 +94,17 @@ function kelvinToFarenheit(kelvin) {
 }
 
 function searchACity(cityName) {
+
     // reset the five day forecast div & array for new data
     $('#five-boxes').html("");
     fiveDayArray = [];
 
     // make async call and search for the user's request
     $.ajax({
-        url: myurl + forecast + apiKey + "&q=" + cityName,
+        url: myurl + weatherCall + apiKey + "&q=" + cityName,
         method: "GET",
         error: function () {
+
             // we need some sort of notification to the user 
             console.log('sorry, that city doesnt exist');
 
@@ -51,33 +115,31 @@ function searchACity(cityName) {
     }
     ).then(function (response) {
 
-        let currentWeatherIcon = response.list[0].weather[0].icon;
+        let currentWeatherIcon = response.weather[0].icon;
 
         let picUrl = "http://openweathermap.org/img/wn/" + currentWeatherIcon + "@2x.png";
 
-
         // update the HTML with the response info
-        document.querySelector("#results-city-name").textContent = response.city.name;
+        document.querySelector("#results-city-name").textContent = response.name;
 
         document.querySelector("#results-temperature").textContent = "Temperature: " +
-            kelvinToFarenheit(parseFloat(response.list[0].main.temp)).toFixed(1) + "°F";
+            kelvinToFarenheit(parseFloat(response.main.temp)).toFixed(1) + "°F";
 
-        document.querySelector("#results-humidity").textContent = "Humidity: " + response.list[0].main.humidity + "%";
+        document.querySelector("#results-humidity").textContent = "Humidity: " + response.main.humidity + "%";
 
-        document.querySelector("#results-wind-speed").textContent = "Wind Speed: " + response.list[0].wind.speed + " MPH";
+        document.querySelector("#results-wind-speed").textContent = "Wind Speed: " + response.wind.speed + " MPH";
 
         document.querySelector("#results-date").textContent = "\xa0\xa0(" + currentDate + ")";
 
         $("#results-icon").attr("src", picUrl);
 
         // get the UV Index based on the latitude & longitude
-        uvSearch(response.city.coord.lat, response.city.coord.lon);
+        uvSearch(response.coord.lat, response.coord.lon);
 
         // build the 5 day forecast 
-        fiveDayForecast(response.list);
+        fiveDayForecast(response.name);
 
         // add the city name to the searchResults array
-
         searchHistory.push(cityName);
 
         // this will keep the search history to max 8 results
@@ -123,43 +185,86 @@ function searchACity(cityName) {
     };
 }
 
-function fiveDayForecast(list) {
+function fiveDayForecast(cityName) {
 
+    // counting variable used in moment() logic check
     let numberOfDays = 1;
 
-    list.forEach(function (i) {
+    // make async call and make a forecast search 
+    $.ajax({
+        url: myurl + forecast + apiKey + "&q=" + cityName,
+        method: "GET",
+        error: function () {
+            // we need some sort of notification to the user 
+            console.log('sorry, that city doesnt exist');
 
-        let iteratedDate = moment(i.dt_txt).format("MM DD YYYY");
-        let checkDate = moment().add(numberOfDays, 'days').format("MM DD YYYY");
-
-        if (checkDate === iteratedDate && numberOfDays < 6) {
-
-            // use fiveDayArray to add each day's relevant info 
-            // we need: date, icon, max_temp & humidity
-
-            fiveDayArray.push({
-
-                date: iteratedDate,
-                icon: i.weather[0].icon.replace("n", "d"),
-                temp_max: i.main.temp_max,
-                humidity: i.main.humidity
-
-            });
-
-            numberOfDays++;
         }
+
+    }
+    ).then(function (response) {
+
+        response.list.forEach(function (i) {
+
+            let iteratedDate = moment(i.dt_txt).format("MM DD YYYY");
+
+            let checkDate = moment().add(numberOfDays, 'days').format("MM DD YYYY");
+
+
+            console.log(checkDate, iteratedDate);
+
+            if (checkDate === iteratedDate) {
+
+                response.list.forEach(function (x) {
+                    let iteratedDate2 = moment(x.dt_txt).format("MM DD YYYY");
+
+                    if (checkDate === iteratedDate2 && x.main.temp_max > hottestTemp) {
+
+                        topIcon = x.weather[0].icon;
+                        hottestTemp = x.main.temp_max;
+                        topHumidity = x.main.humidity;
+                    }
+                });
+
+                fiveDayArray.push({
+
+                    date: iteratedDate,
+                    icon: topIcon,
+                    temp_max: hottestTemp,
+                    humidity: topHumidity
+
+                });
+
+                numberOfDays++;
+
+            };
+
+            hottestTemp = 0;
+
+        });
+
+        // converts array to a Set which is a lazy way to remove duplicates due to crappy noob code :)
+
+        console.log(fiveDayArray);
+        let uniqueSet = [...new Set(fiveDayArray)];
+
+        // use uniqueSet to build the five day forecast boxes
+        buildFiveBoxes(uniqueSet);
+
     });
 
-    // converts object array to a Set which is a lazy way to remove duplicates due to crappy noob code :)
-    let uniqueSet = [...new Set(fiveDayArray)];
 
-    // use uniqueSet to build the five day forecast boxes
-    buildFiveBoxes(uniqueSet);
+
+
+
+
 
 };
 
 
 function buildFiveBoxes(box) {
+
+    console.log(box);
+
 
     box.forEach(function (index) {
         // this box will hold all the info
@@ -187,4 +292,6 @@ function buildFiveBoxes(box) {
     });
 
 }
+
+
 

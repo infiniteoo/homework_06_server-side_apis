@@ -16,8 +16,8 @@ function getLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition, handle_error);
 
-    } 
-    
+    }
+
     function handle_error(err) {
 
         if (err.code == 1) {
@@ -45,14 +45,12 @@ function getLocation() {
             userLat = position.coords.latitude;
             userLong = position.coords.longitude;
         } else {
-            userLat = 44.98;
-            userLong = 93.27;
+            userLat = 44.9818;
+            userLong = 93.2775;
         }
 
-        console.log(userLat, userLong);
-
         $.ajax({
-            url: myurl + weatherCall + apiKey + "&lat=" + userLat.toFixed(1) + "&lon=" + userLong.toFixed(0),
+            url: myurl + weatherCall + apiKey + "&lat=" + userLat.toFixed(4) + "&lon=" + userLong.toFixed(4),
             method: "GET",
 
         }).then(function (r) {
@@ -69,7 +67,7 @@ function getLocation() {
 $(document).ready(() => letsGo());
 
 
-// set up button listners for the main search button and search history
+// set up the main search button and search history event listeners
 function letsGo() {
 
     getLocation();
@@ -88,10 +86,12 @@ function letsGo() {
     }
 }
 
+
 function kelvinToFarenheit(kelvin) {
 
     return (kelvin - 273.15) * 1.8 + 32;
 }
+
 
 function searchACity(cityName) {
 
@@ -115,8 +115,8 @@ function searchACity(cityName) {
     }
     ).then(function (response) {
 
+        // prepare the icon URL
         let currentWeatherIcon = response.weather[0].icon;
-
         let picUrl = "http://openweathermap.org/img/wn/" + currentWeatherIcon + "@2x.png";
 
         // update the HTML with the response info
@@ -156,7 +156,6 @@ function searchACity(cityName) {
             $('#search-results').append(listItem);
 
         });
-
     });
 
     // find the UV index of a city based on its coordinates
@@ -168,8 +167,6 @@ function searchACity(cityName) {
             method: "GET"
 
         }).then(function (response) {
-
-            $('#uvSpan').css("padding", "5px");
 
             if (response.value < 3) {
                 $('#uvSpan').css("background-color", "green");
@@ -193,30 +190,24 @@ function fiveDayForecast(cityName) {
     // make async call and make a forecast search 
     $.ajax({
         url: myurl + forecast + apiKey + "&q=" + cityName,
-        method: "GET",
-        error: function () {
-            // we need some sort of notification to the user 
-            console.log('sorry, that city doesnt exist');
-
-        }
-
+        method: "GET"
     }
     ).then(function (response) {
+        let hottestTemp = 0;
 
+        // check each item in response array for a date match
         response.list.forEach(function (i) {
 
             let iteratedDate = moment(i.dt_txt).format("MM DD YYYY");
 
             let checkDate = moment().add(numberOfDays, 'days').format("MM DD YYYY");
 
+            if (checkDate === iteratedDate & numberOfDays < 6) {
 
-            console.log(checkDate, iteratedDate);
-
-            if (checkDate === iteratedDate) {
-
+                 // iterate again & look for hottest prediction of that day
                 response.list.forEach(function (x) {
                     let iteratedDate2 = moment(x.dt_txt).format("MM DD YYYY");
-
+                    
                     if (checkDate === iteratedDate2 && x.main.temp_max > hottestTemp) {
 
                         topIcon = x.weather[0].icon;
@@ -242,29 +233,13 @@ function fiveDayForecast(cityName) {
 
         });
 
-        // converts array to a Set which is a lazy way to remove duplicates due to crappy noob code :)
-
-        console.log(fiveDayArray);
-        let uniqueSet = [...new Set(fiveDayArray)];
-
-        // use uniqueSet to build the five day forecast boxes
-        buildFiveBoxes(uniqueSet);
+        buildFiveBoxes(fiveDayArray);
 
     });
-
-
-
-
-
-
-
 };
 
 
 function buildFiveBoxes(box) {
-
-    console.log(box);
-
 
     box.forEach(function (index) {
         // this box will hold all the info
@@ -274,7 +249,7 @@ function buildFiveBoxes(box) {
 
         // build the weather icon picture
         let picUrl = "http://openweathermap.org/img/wn/" + index.icon + "@2x.png";
-        let newPic = $("<img>").attr("src", picUrl);
+        let newPic = $("<img>").attr("src", picUrl).attr("alt", "weather icon");
         newBox.append(newPic);
 
         // the temperature span 

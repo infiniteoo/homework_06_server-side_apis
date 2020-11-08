@@ -18,7 +18,7 @@ The focus of this assignment was to build a dynamically updated weather dashboar
 
 ### Review of Tasks
 
-In anticipation for the transition to learning React later in the course, I purchased a book by Eve Porcello and Alex Banks entitled "Learning React" (Second Edition) from O'Reilly Books.  
+In anticipation for the transition to learning React later in the course, I purchased a book by Eve Porcello and Alex Banks entitled **"Learning React"** (Second Edition) from O'Reilly Books.  
 
 I spent the majority of my week reviewing the early chapters of this book, learning modern ES6 techniques, and trying to wrap my head around the concept of "functional programming".  It's confusing to say the least, but I'm slowly beginning to wrap my head around it.
 

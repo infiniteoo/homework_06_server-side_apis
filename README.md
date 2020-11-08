@@ -37,7 +37,7 @@ In addition to really mastering the fundamentals of ajax, this week also brought
 * Added geolocation search when user connects to site.  if they decline, the site will default search to the Minneapolis/ St. Paul area.
 
 
-After multiple trial and error debugging sessions, all applied logic appears sound and no bugs can be generated from purposeful negligent entries.  From this point, it was time to clean up:
+*After multiple trial and error debugging sessions, all applied logic appears sound and no bugs can be generated from purposeful negligent entries.  From this point, it was time to clean up:*
 
 * Refactor reduntant and worthless code.
 * Removed multiple, annoying console.log commands used for debugging.

@@ -229,9 +229,8 @@ function fiveDayForecast(cityName) {
             hottestTemp = 0;
 
         });
-
+        // generated the five day forecast from the array we built
         buildFiveBoxes(fiveDayArray);
-
     });
 };
 

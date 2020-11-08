@@ -1,6 +1,6 @@
 # University of Minnesota Coding Boot Camp - Fall 2020 
 ## Assignment #06 Server-Side APIs: Weather Dashboard
-
+<br/>
 
 ### Overview
 

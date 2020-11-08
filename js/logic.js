@@ -1,5 +1,5 @@
 const apiKey = "25ab3c34a12d0c6508e3ac9bdd6bfe25";
-const myurl = "http://api.openweathermap.org/data/2.5/";
+const myurl = "https://api.openweathermap.org/data/2.5/";
 const forecast = "forecast?appid=";
 const weatherCall = "weather?appid=";
 const currentDate = moment().format('MM/DD/YYYY');

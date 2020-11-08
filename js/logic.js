@@ -114,7 +114,7 @@ function searchACity(cityName) {
 
         // prepare the icon URL
         let currentWeatherIcon = response.weather[0].icon;
-        let picUrl = "http://openweathermap.org/img/wn/" + currentWeatherIcon + "@2x.png";
+        let picUrl = "https://openweathermap.org/img/wn/" + currentWeatherIcon + "@2x.png";
 
         // update the HTML with the response info
         document.querySelector("#results-city-name").textContent = response.name;
@@ -244,7 +244,7 @@ function buildFiveBoxes(box) {
         newBox.text(index.date);
 
         // build the weather icon picture
-        let picUrl = "http://openweathermap.org/img/wn/" + index.icon + "@2x.png";
+        let picUrl = "https://openweathermap.org/img/wn/" + index.icon + "@2x.png";
         let newPic = $("<img>").attr("src", picUrl).attr("alt", "weather icon");
         newBox.append(newPic);
 

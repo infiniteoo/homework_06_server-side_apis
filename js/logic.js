@@ -16,7 +16,7 @@ function getLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition, handle_error);
 
-    }
+    };
 
     function handle_error(err) {
 
@@ -35,8 +35,8 @@ function getLocation() {
                 searchACity(r.name);
 
             });
-        }
-    }
+        };
+    };
 
     function showPosition(position) {
         if (navigator.geolocation) {
@@ -56,7 +56,7 @@ function getLocation() {
             searchACity(r.name);
 
         });
-    }
+    };
 };
 
 

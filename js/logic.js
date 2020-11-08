@@ -34,9 +34,7 @@ function getLocation() {
 
                 searchACity(r.name);
 
-
             });
-
         }
     }
 
@@ -56,7 +54,6 @@ function getLocation() {
         }).then(function (r) {
 
             searchACity(r.name);
-
 
         });
     }
@@ -204,10 +201,10 @@ function fiveDayForecast(cityName) {
 
             if (checkDate === iteratedDate & numberOfDays < 6) {
 
-                 // iterate again & look for hottest prediction of that day
+                // iterate again & look for hottest prediction of that day
                 response.list.forEach(function (x) {
                     let iteratedDate2 = moment(x.dt_txt).format("MM DD YYYY");
-                    
+
                     if (checkDate === iteratedDate2 && x.main.temp_max > hottestTemp) {
 
                         topIcon = x.weather[0].icon;

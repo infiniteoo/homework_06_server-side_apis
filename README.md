@@ -57,7 +57,7 @@ Installation should be fairly straightforward, but here's a quick guide to get u
 
 ### Live Example
 
-This project can be previewed live via Github Pages at: https://infiniteoo.github.io/homework_week_06_server-side_apis/
+This project can be previewed live via Github Pages at: `https://infiniteoo.github.io/homework_week_06_server-side_apis/`
 
 # Screenshots of Deployed Website
 

@@ -221,11 +221,11 @@ function fiveDayForecast(cityName) {
                     humidity: topHumidity
 
                 });
-
+                // allows us to search the next day
                 numberOfDays++;
 
             };
-
+            // resets the hottest temp for our next day search
             hottestTemp = 0;
 
         });
